@@ -114,28 +114,27 @@ const Post = ({ posts, comments }: dataType) => {
               placeholder="작성자"
               value={isWriter}
               onChange={handleWriter}
+              required
             />
             <PostInput
               type="password"
               placeholder="비밀번호"
               value={isPassword}
               onChange={handlePassword}
+              required
             />
           </PostInputWrap>
-          {/* <input
-            type="text"
-            placeholder="댓글달기..."
-            value={isComment}
-            onChange={handleChange}
-          /> */}
           <PostTextArea
             placeholder="댓글을 남겨주세요."
             value={isComment}
             rows={50}
             cols={4}
             onChange={handleChange}
+            required
           />
-          <button>등록</button>
+          <PostBtnWrap>
+            <PostBtn>등록</PostBtn>
+          </PostBtnWrap>
         </PostTextForm>
       </PostTextContainer>
     </>
@@ -224,7 +223,7 @@ const PostTextArea = styled.textarea`
 `;
 
 const PostTextForm = styled.form`
-  margin: 1rem 0;
+  margin: 1rem 0 0;
 `;
 
 const PostInputWrap = styled.div`
@@ -241,6 +240,20 @@ const PostInput = styled.input`
   &:focus {
     outline: none;
   }
+`;
+
+const PostBtnWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0 0;
+`;
+const PostBtn = styled.button`
+  padding: 0.5rem 0.8rem;
+  background: linear-gradient(to bottom, #fff 0, #f3f3f3 100%);
+  border: 1px solid;
+  border-color: #ccc #c6c6c6 #c3c3c3 #ccc;
+  border-radius: 3px;
 `;
 
 export default Post;
