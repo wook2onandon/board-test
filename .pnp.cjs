@@ -39,7 +39,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["next", "virtual:d4348e8e213b21f8eaee8177a5c59c48575651095c326278053f87e14824efb567a9a9d3c2e9b346b68ac85a6f191116841f0a23f59937214666dcc252962451#npm:13.2.4"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:d4348e8e213b21f8eaee8177a5c59c48575651095c326278053f87e14824efb567a9a9d3c2e9b346b68ac85a6f191116841f0a23f59937214666dcc252962451#npm:18.2.0"],\
-            ["typescript", "patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=85af82"]\
+            ["typescript", "patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=85af82"],\
+            ["uuid", "npm:9.0.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -1116,7 +1117,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["next", "virtual:d4348e8e213b21f8eaee8177a5c59c48575651095c326278053f87e14824efb567a9a9d3c2e9b346b68ac85a6f191116841f0a23f59937214666dcc252962451#npm:13.2.4"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:d4348e8e213b21f8eaee8177a5c59c48575651095c326278053f87e14824efb567a9a9d3c2e9b346b68ac85a6f191116841f0a23f59937214666dcc252962451#npm:18.2.0"],\
-            ["typescript", "patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=85af82"]\
+            ["typescript", "patch:typescript@npm%3A5.0.2#~builtin<compat/typescript>::version=5.0.2&hash=85af82"],\
+            ["uuid", "npm:9.0.0"]\
           ],\
           "linkType": "SOFT"\
         }]\
@@ -3966,6 +3968,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["uri-js", "npm:4.4.1"],\
             ["punycode", "npm:2.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["uuid", [\
+        ["npm:9.0.0", {\
+          "packageLocation": "./.yarn/cache/uuid-npm-9.0.0-46c41e3e43-8dd2c83c43.zip/node_modules/uuid/",\
+          "packageDependencies": [\
+            ["uuid", "npm:9.0.0"]\
           ],\
           "linkType": "HARD"\
         }]\

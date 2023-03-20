@@ -1,5 +1,4 @@
 import Posts from '@/components/Posts';
-
 export interface PostType {
   id: number; // 글번호
   title: string; // 제목

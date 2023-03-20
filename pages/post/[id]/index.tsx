@@ -1,7 +1,7 @@
 import { CommentType, PostType, dataType } from '@/pages';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { v4 as uuid } from '@types/uuid';
+import { v4 as uuid } from 'uuid';
+import styled from '@emotion/styled';
 
 export const postComment = async (comment: CommentType) => {
   await fetch('http://localhost:3000/comments', {
@@ -34,11 +34,10 @@ const Post = ({ posts, comments }: dataType) => {
   const [isWriter, setIsWriter] = useState('');
   const [isPassword, setIsPassword] = useState('');
 
-  const router = useRouter();
-
   useEffect(() => {
     setPost({ ...posts[0] });
     setCommentArr(comments);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e: any) => {
@@ -77,47 +76,68 @@ const Post = ({ posts, comments }: dataType) => {
   return (
     <>
       {post && (
-        <div>
-          <h1>Post: {post.content}</h1>
-          <div>작성자: {post.writer}</div>
-          <div>
-            작성일: {post.created_at.split('T')[0]}&nbsp;{' '}
-            {`${post.created_at.split('T')[1].split(':')[0]}:${
-              post.created_at.split('T')[1].split(':')[1]
-            }`}
-          </div>
-        </div>
+        <>
+          <DivContainer>
+            <PostTitle>
+              {post.title.length > 30
+                ? `${post.title.substring(0, 30)}...`
+                : post.title}
+            </PostTitle>
+            <PostDate>
+              {post.created_at.split('T')[0]}&nbsp;{' '}
+              {`${post.created_at.split('T')[1].split(':')[0]}:${
+                post.created_at.split('T')[1].split(':')[1]
+              }`}
+            </PostDate>
+          </DivContainer>
+          <DivWriterWrap>
+            <div>작성자: {post.writer}</div>
+            <div>댓글수: {commentArr.length}</div>
+          </DivWriterWrap>
+          <PostContent>{post.content}</PostContent>
+        </>
       )}
+      <PostCommentLength>댓글 {commentArr.length}개</PostCommentLength>
       {commentArr.map((comment) => {
         return (
-          <div key={comment.id}>
-            <div>{comment.content}</div> <br />
-          </div>
+          <PostCommentWrap key={comment.id}>
+            <div>{comment.content}</div>
+          </PostCommentWrap>
         );
       })}
-      <div onSubmit={handleSubmit}>
-        <form>
-          <input
-            type="text"
-            placeholder="작성자"
-            value={isWriter}
-            onChange={handleWriter}
-          />
-          <input
-            type="password"
-            placeholder="비밀번호"
-            value={isPassword}
-            onChange={handlePassword}
-          />
-          <input
+      <PostTextContainer onSubmit={handleSubmit}>
+        <PostTextTitle>댓글쓰기</PostTextTitle>
+        <PostTextForm>
+          <PostInputWrap>
+            <PostInput
+              type="text"
+              placeholder="작성자"
+              value={isWriter}
+              onChange={handleWriter}
+            />
+            <PostInput
+              type="password"
+              placeholder="비밀번호"
+              value={isPassword}
+              onChange={handlePassword}
+            />
+          </PostInputWrap>
+          {/* <input
             type="text"
             placeholder="댓글달기..."
             value={isComment}
             onChange={handleChange}
+          /> */}
+          <PostTextArea
+            placeholder="댓글을 남겨주세요."
+            value={isComment}
+            rows={50}
+            cols={4}
+            onChange={handleChange}
           />
-          <button>게시</button>
-        </form>
-      </div>
+          <button>등록</button>
+        </PostTextForm>
+      </PostTextContainer>
     </>
   );
 };
@@ -134,5 +154,93 @@ export const getServerSideProps = async (context: any) => {
   ]);
   return { props: { posts, comments } };
 };
+
+const DivContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-end;
+`;
+
+const DivWriterWrap = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-bottom: 1px solid rgb(229, 229, 229);
+  padding: 0.8rem 0;
+`;
+
+const PostTitle = styled.h2`
+  font-size: 1.4rem;
+`;
+
+const PostDate = styled.span`
+  color: #6b6b6b;
+`;
+
+const PostContent = styled.h3`
+  padding: 2rem 0;
+  min-height: ;
+  font-size: 1.1rem;
+  font-weight: 400;
+  border-bottom: 1px solid rgb(229, 229, 229);
+`;
+
+const PostCommentLength = styled.div`
+  width: 100%;
+  background: linear-gradient(to bottom, #fff 0, #f9f9f9 100%);
+  padding: 0.5rem;
+  margin: 1rem 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const PostCommentWrap = styled.div`
+  border-bottom: 1px solid rgb(229, 229, 229);
+  padding: 1.5rem 0.5rem;
+`;
+
+const PostTextContainer = styled.div`
+  margin: 2rem 0;
+  padding: 12px 16px 20px;
+  background: #fcfcfc;
+  border: 1px solid #ddd;
+  border-bottom-color: #ccc;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px -1px rgba(0, 0, 0, 0.1);
+`;
+
+const PostTextTitle = styled.span`
+  /*  */
+`;
+
+const PostTextArea = styled.textarea`
+  background: rgb(255, 255, 255);
+  min-height: 4rem;
+  height: 49px;
+  width: 100%;
+  padding: 0.5rem;
+`;
+
+const PostTextForm = styled.form`
+  margin: 1rem 0;
+`;
+
+const PostInputWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin: 0 0 0.5rem;
+`;
+
+const PostInput = styled.input`
+  padding: 0.2rem;
+
+  &:focus {
+    outline: none;
+  }
+`;
 
 export default Post;
