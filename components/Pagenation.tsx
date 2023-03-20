@@ -9,7 +9,6 @@ interface pageType {
 
 function Pagination({ total, limit, page, setPage }: pageType) {
   const numPages = Math.ceil(total / limit);
-  console.log(numPages);
 
   return (
     <>
@@ -17,8 +16,8 @@ function Pagination({ total, limit, page, setPage }: pageType) {
         <Button onClick={() => setPage(page - 1)} disabled={page === 1}>
           &lt;
         </Button>
-        {/* {Array(numPages)
-          .fill()
+        {Array(numPages)
+          .fill('')
           .map((_, i) => (
             <Button
               key={i + 1}
@@ -27,7 +26,7 @@ function Pagination({ total, limit, page, setPage }: pageType) {
             >
               {i + 1}
             </Button>
-          ))} */}
+          ))}
         <Button onClick={() => setPage(page + 1)} disabled={page === numPages}>
           &gt;
         </Button>
@@ -49,24 +48,26 @@ const Button = styled.button`
   border-radius: 8px;
   padding: 8px;
   margin: 0;
-  background: black;
-  color: white;
+  /* background: black; */
+  border: 1px solid rgb(229, 229, 229);
+  color: rgb(75, 75, 75);
   font-size: 1rem;
 
   &:hover {
-    background: tomato;
+    background: rgb(203, 203, 203);
     cursor: pointer;
     transform: translateY(-2px);
   }
 
   &[disabled] {
-    background: grey;
+    border: 1px solid rgb(245, 245, 245);
+    color: rgb(213, 213, 213);
     cursor: revert;
     transform: revert;
   }
 
   &[aria-current] {
-    background: deeppink;
+    background: ${(e) => e['aria-current'] === 'page' && `rgb(203, 203, 203)`};
     font-weight: bold;
     cursor: revert;
     transform: revert;
