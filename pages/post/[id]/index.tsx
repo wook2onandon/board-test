@@ -20,15 +20,56 @@ export const fetchComment = async (id: number) => {
   return data;
 };
 
-const Post = ({ posts, comments }: dataType) => {
+const Post = ({
+  posts,
+  comments,
+}: {
+  posts: PostType;
+  comments: CommentType[];
+}) => {
   const [post, setPost] = useState<PostType>();
   const [commentArr, setCommentArr] = useState<CommentType[]>([]);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [isWriter, setIsWriter] = useState('');
+  const [isPassword, setIsPassword] = useState('');
 
   useEffect(() => {
-    setPost({ ...posts[0] });
+    setPost(posts);
     setCommentArr(comments);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleWriter = (e: any) => {
+    setIsWriter(e.target.value);
+  };
+
+  const handlePassword = (e: any) => {
+    setIsPassword(e.target.value);
+  };
+
+  const openDeleteCheck = () => {
+    setOpenDelete(!openDelete);
+  };
+
+  const handleDelete = (postId: number) => {
+    fetch(`http://localhost:3000/posts/${postId}`, {
+      method: 'DELETE',
+      // headers: {
+      //   'Content-Type': 'application/json',
+      //   writer: isWriter,
+      //   password: isPassword,
+      // },
+      // body: JSON.stringify({
+
+      // }),
+    })
+      .then((res) => {
+        console.log(res, 'success');
+      })
+      .catch((res) => {
+        console.log(res, 'fail');
+      });
+  };
 
   return (
     <>
@@ -50,6 +91,8 @@ const Post = ({ posts, comments }: dataType) => {
           <DivWriterWrap>
             <div>작성자: {post.writer}</div>
             <div>댓글수: {commentArr.length}</div>
+            <PostBtn>수정</PostBtn>
+            <PostBtn onClick={openDeleteCheck}>삭제</PostBtn>
           </DivWriterWrap>
           <PostContent>{post.content}</PostContent>
         </>
@@ -57,8 +100,36 @@ const Post = ({ posts, comments }: dataType) => {
       <Comment
         comments={commentArr}
         setCommentArr={setCommentArr}
-        postId={{ ...posts[0] }.id}
+        postId={posts.id}
       />
+      {openDelete && post && (
+        <>
+          <DeleteContainer>
+            <DeleteTitle>삭제하기</DeleteTitle>
+            <PostInputWrap>
+              <PostInput
+                type="text"
+                placeholder="작성자"
+                value={isWriter}
+                onChange={handleWriter}
+                required
+              />
+              <PostInput
+                type="password"
+                placeholder="비밀번호"
+                value={isPassword}
+                onChange={handlePassword}
+                required
+              />
+            </PostInputWrap>
+            <PostBtnWrap>
+              <PostBtn onClick={() => handleDelete(post.id)}>삭제</PostBtn>
+              <PostBtn onClick={openDeleteCheck}>취소</PostBtn>
+            </PostBtnWrap>
+          </DeleteContainer>
+          <DeleteBg onClick={openDeleteCheck}></DeleteBg>
+        </>
+      )}
     </>
   );
 };
@@ -66,7 +137,7 @@ const Post = ({ posts, comments }: dataType) => {
 export const getServerSideProps = async (context: any) => {
   const { id } = context.query;
   const [postsRes, commentslRes] = await Promise.all([
-    fetch(`http://localhost:3000/posts?id=${id}`),
+    fetch(`http://localhost:3000/posts/${id}`),
     fetch(`http://localhost:3000/comments?postId=${id}`),
   ]);
   const [posts, comments] = await Promise.all([
@@ -85,11 +156,19 @@ const DivContainer = styled.div`
 
 const DivWriterWrap = styled.div`
   display: flex;
-  width: 100%;
   justify-content: flex-end;
+  align-items: center;
+  width: 100%;
   gap: 1rem;
   border-bottom: 1px solid rgb(229, 229, 229);
   padding: 0.8rem 0;
+`;
+
+const PostBtn = styled.button`
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid #535353;
 `;
 
 const PostTitle = styled.h2`
@@ -106,6 +185,58 @@ const PostContent = styled.h3`
   font-size: 1.1rem;
   font-weight: 400;
   border-bottom: 1px solid rgb(229, 229, 229);
+`;
+
+const DeleteBg = styled.div`
+  background: #000;
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+`;
+
+const DeleteContainer = styled.div`
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  padding: 2rem;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  z-index: 1001;
+`;
+
+const DeleteTitle = styled.h4`
+  text-align: center;
+  margin: 0 0 0.8rem;
+`;
+
+const PostInputWrap = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+`;
+
+const PostInput = styled.input`
+  padding: 0.2rem;
+
+  &:focus {
+    outline: none;
+  }
+`;
+
+const PostBtnWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 2rem 0 0;
 `;
 
 export default Post;

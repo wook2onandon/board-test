@@ -24,8 +24,10 @@ const Write = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const id = uuid();
+    const guidBytes = `0${id.replace(/-/g, '')}`;
+    const uuidToInt = parseInt(guidBytes, 16);
     await postContent({
-      id: id,
+      id: uuidToInt,
       title: isTitle,
       content: isContent,
       writer: isWriter,
