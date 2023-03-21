@@ -28,7 +28,9 @@ const PostCard = ({
                   ? `${post.title.substring(0, 20)}...`
                   : post.title}
               </DivTitle>
-              <SpanComment>[{comment.length}]</SpanComment>
+              {comment.length !== 0 && (
+                <SpanComment>[{comment.length}]</SpanComment>
+              )}
             </DivTitleWrap>
             <DivContent>
               {post.content.length > 40
