@@ -3,6 +3,7 @@ import { dataType } from '@/pages';
 import { useState } from 'react';
 import Pagination from './Pagenation';
 import styled from '@emotion/styled';
+import Link from 'next/link';
 
 const Posts = ({ posts, comments }: dataType) => {
   const [page, setPage] = useState(1);
@@ -40,6 +41,11 @@ const Posts = ({ posts, comments }: dataType) => {
             return <PostCard post={post} key={post.id} comments={comments} />;
           })}
       </DivContainer>
+      <PostBtnWrap>
+        <Link href={'/write'}>
+          <PostBtn>글쓰기</PostBtn>
+        </Link>
+      </PostBtnWrap>
       <Pagination
         total={posts.length}
         limit={limit}
@@ -89,6 +95,22 @@ const LiDate = styled.li`
 
 const DivTitle = styled.div`
   font-size: 1rem;
+`;
+
+const PostBtnWrap = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0 0;
+`;
+
+const PostBtn = styled.button`
+  cursor: pointer;
+  padding: 0.5rem 0.8rem;
+  background: linear-gradient(to bottom, #fff 0, #f3f3f3 100%);
+  border: 1px solid;
+  border-color: #ccc #c6c6c6 #c3c3c3 #ccc;
+  border-radius: 3px;
 `;
 
 export default Posts;
