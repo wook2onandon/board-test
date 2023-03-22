@@ -1,8 +1,9 @@
 import { CommentType, PostType, dataType } from '@/pages';
 import { useEffect, useState } from 'react';
-import { v4 as uuid } from 'uuid';
-import styled from '@emotion/styled';
 import Comment from '@/components/Comment';
+import styled from '@emotion/styled';
+import RedirectPopUp from '@/components/RedirectPopUp';
+import { useRouter } from 'next/router';
 
 export const postComment = async (comment: CommentType) => {
   await fetch('http://localhost:3000/comments', {
@@ -30,18 +31,16 @@ const Post = ({
   const [post, setPost] = useState<PostType>();
   const [commentArr, setCommentArr] = useState<CommentType[]>([]);
   const [openDelete, setOpenDelete] = useState(false);
-  const [isWriter, setIsWriter] = useState('');
+  const [openRedirect, setOpenRedirect] = useState(false);
+  const [openModify, setOpenModify] = useState(false);
   const [isPassword, setIsPassword] = useState('');
+  const { push } = useRouter();
 
   useEffect(() => {
     setPost(posts);
     setCommentArr(comments);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleWriter = (e: any) => {
-    setIsWriter(e.target.value);
-  };
 
   const handlePassword = (e: any) => {
     setIsPassword(e.target.value);
@@ -51,24 +50,47 @@ const Post = ({
     setOpenDelete(!openDelete);
   };
 
-  const handleDelete = (postId: number) => {
-    fetch(`http://localhost:3000/posts/${postId}`, {
-      method: 'DELETE',
-      // headers: {
-      //   'Content-Type': 'application/json',
-      //   writer: isWriter,
-      //   password: isPassword,
-      // },
-      // body: JSON.stringify({
+  const openModifyCheck = () => {
+    setOpenModify(!openModify);
+  };
 
-      // }),
+  const handleDelete = async (postId: number) => {
+    await fetch(`http://localhost:3000/posts/${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        password: isPassword,
+      }),
     })
       .then((res) => {
-        console.log(res, 'success');
+        if (res.status === 200) {
+          setOpenDelete(false);
+          setOpenRedirect(true);
+        } else {
+          alert('비밀번호를 확인해주세요.');
+        }
       })
       .catch((res) => {
         console.log(res, 'fail');
       });
+  };
+
+  const handlePasswordCheck = async (postId: number) => {
+    const res = await fetch(
+      `http://localhost:3000/posts/${postId}?_password=${isPassword}`,
+    );
+    const result = await res.json().then((res) => {
+      if (res.password === isPassword) {
+        //
+        window.localStorage.setItem('password', isPassword);
+        window.localStorage.setItem('writer', posts.writer);
+        push(`/modify/${postId}`);
+      } else {
+        alert('비밀번호를 확인해주세요.');
+      }
+    });
   };
 
   return (
@@ -91,7 +113,7 @@ const Post = ({
           <DivWriterWrap>
             <div>작성자: {post.writer}</div>
             <div>댓글수: {commentArr.length}</div>
-            <PostBtn>수정</PostBtn>
+            <PostBtn onClick={openModifyCheck}>수정</PostBtn>
             <PostBtn onClick={openDeleteCheck}>삭제</PostBtn>
           </DivWriterWrap>
           <PostContent>{post.content}</PostContent>
@@ -108,13 +130,6 @@ const Post = ({
             <DeleteTitle>삭제하기</DeleteTitle>
             <PostInputWrap>
               <PostInput
-                type="text"
-                placeholder="작성자"
-                value={isWriter}
-                onChange={handleWriter}
-                required
-              />
-              <PostInput
                 type="password"
                 placeholder="비밀번호"
                 value={isPassword}
@@ -130,6 +145,30 @@ const Post = ({
           <DeleteBg onClick={openDeleteCheck}></DeleteBg>
         </>
       )}
+      {openModify && post && (
+        <>
+          <DeleteContainer>
+            <DeleteTitle>수정하시겠습니까?</DeleteTitle>
+            <PostInputWrap>
+              <PostInput
+                type="password"
+                placeholder="비밀번호"
+                value={isPassword}
+                onChange={handlePassword}
+                required
+              />
+            </PostInputWrap>
+            <PostBtnWrap>
+              <PostBtn onClick={() => handlePasswordCheck(post.id)}>
+                확인
+              </PostBtn>
+              <PostBtn onClick={openModifyCheck}>취소</PostBtn>
+            </PostBtnWrap>
+          </DeleteContainer>
+          <DeleteBg onClick={openModifyCheck}></DeleteBg>
+        </>
+      )}
+      {openRedirect && <RedirectPopUp address={'/'} text={'삭제되었습니다.'} />}
     </>
   );
 };
@@ -165,6 +204,7 @@ const DivWriterWrap = styled.div`
 `;
 
 const PostBtn = styled.button`
+  cursor: pointer;
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   background: #fff;

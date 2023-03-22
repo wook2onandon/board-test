@@ -172,6 +172,7 @@ const PostBtnWrap = styled.div`
 `;
 
 const PostBtn = styled.button`
+  cursor: pointer;
   padding: 0.5rem 0.8rem;
   background: linear-gradient(to bottom, #fff 0, #f3f3f3 100%);
   border: 1px solid;

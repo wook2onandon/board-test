@@ -1,44 +1,43 @@
 import styled from '@emotion/styled';
-import { PostType } from '..';
-import { useState } from 'react';
-import { v4 as uuid } from 'uuid';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { PostType } from '@/pages';
 
-export const postContent = async (post: PostType) => {
-  await fetch('http://localhost:3000/posts', {
-    method: 'POST',
+export const patchContent = async (post: PostType) => {
+  const res = await fetch(`http://localhost:3000/posts/${post.id}`, {
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(post),
   });
+  const result = await res
+    .json()
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((res) => console.log(res));
 };
 
-const Write = () => {
+const Write = ({ post }: { post: PostType }) => {
   const [isContent, setIsContent] = useState('');
   const [isTitle, setIsTitle] = useState('');
   const [isWriter, setIsWriter] = useState('');
   const [isPassword, setIsPassword] = useState('');
-  const { push } = useRouter();
-
+  const { push, query } = useRouter();
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const id = uuid();
-    const guidBytes = `0${id.replace(/-/g, '')}`;
-    const uuidToInt = parseInt(guidBytes, 16);
-    await postContent({
-      id: uuidToInt,
+
+    await patchContent({
+      id: Number(query.id),
       title: isTitle,
       content: isContent,
       writer: isWriter,
       password: isPassword,
-      created_at: new Date().toISOString(),
+      created_at: post.created_at,
+      updated_at: new Date().toISOString(),
     });
-    setIsContent('');
-    setIsTitle('');
-    setIsWriter('');
-    setIsPassword('');
-    alert('게시글 작성이 완료되었습니다.');
+    alert('게시글 수정이 완료되었습니다.');
     push('/');
   };
 
@@ -50,34 +49,19 @@ const Write = () => {
     setIsTitle(e.target.value);
   };
 
-  const handleWriter = (e: any) => {
-    setIsWriter(e.target.value);
-  };
-
-  const handlePassword = (e: any) => {
-    setIsPassword(e.target.value);
-  };
+  useEffect(() => {
+    setIsTitle(post.title);
+    setIsContent(post.content);
+    //@ts-ignore
+    setIsWriter(window.localStorage.getItem('writer'));
+    //@ts-ignore
+    setIsPassword(window.localStorage.getItem('password'));
+  }, [post]);
 
   return (
     <PostTextContainer onSubmit={handleSubmit}>
       <PostTextTitle>게시글 작성</PostTextTitle>
       <PostTextForm>
-        <PostInputWrap>
-          <PostInput
-            type="text"
-            placeholder="작성자"
-            value={isWriter}
-            onChange={handleWriter}
-            required
-          />
-          <PostInput
-            type="password"
-            placeholder="비밀번호"
-            value={isPassword}
-            onChange={handlePassword}
-            required
-          />
-        </PostInputWrap>
         <TitleInput
           type="text"
           placeholder="제목을 입력해주세요."
@@ -99,6 +83,18 @@ const Write = () => {
       </PostTextForm>
     </PostTextContainer>
   );
+};
+
+export const getServerSideProps = async (context: any) => {
+  const { id } = context.query;
+  const res = await fetch(`http://localhost:3000/posts/${id}`);
+  const post = await res.json();
+
+  return {
+    props: {
+      post,
+    },
+  };
 };
 
 const PostTextContainer = styled.div`

@@ -71,6 +71,7 @@ const ReplyComment = ({
 };
 
 const ReplyMoreBtn = styled.p`
+  cursor: pointer;
   font-size: 1rem;
   margin: 0.5rem;
   color: #7f7f7f;

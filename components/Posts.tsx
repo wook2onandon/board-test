@@ -9,7 +9,7 @@ const Posts = ({ posts, comments }: dataType) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const offset = (page - 1) * limit;
-  const [pageNum, setPageNum] = useState<Number>(1);
+  // const [pageNum, setPageNum] = useState<Number>(1);
 
   return (
     <>
