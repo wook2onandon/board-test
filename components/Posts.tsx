@@ -9,8 +9,8 @@ const Posts = ({ posts, comments }: dataType) => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const offset = (page - 1) * limit;
-  // const [pageNum, setPageNum] = useState<Number>(1);
 
+  console.log(offset, offset + limit);
   return (
     <>
       <LabelArticleNum>
@@ -72,6 +72,9 @@ const UlTitleTab = styled.ul`
   align-items: center;
   padding: 2rem 0;
   border-bottom: 1px solid rgb(229, 229, 229);
+  @media (max-width: 800px) {
+    padding: 1rem 0 0.5rem;
+  }
 `;
 
 const LiTitle = styled.li`
@@ -85,12 +88,18 @@ const LiWriter = styled.li`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 800px) {
+    display: none;
+  }
 `;
 const LiDate = styled.li`
   flex: 1 0 12%;
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 800px) {
+    display: none;
+  }
 `;
 
 const DivTitle = styled.div`

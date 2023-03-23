@@ -36,11 +36,13 @@ function Pagination({ total, limit, page, setPage }: pageType) {
 }
 
 const Nav = styled.nav`
+  width: 100%;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 4px;
-  margin: 16px;
+  margin: 1rem 0;
 `;
 
 const Button = styled.button`

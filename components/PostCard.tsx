@@ -27,14 +27,14 @@ const PostCard = ({
                 {post.title.length > 20
                   ? `${post.title.substring(0, 20)}...`
                   : post.title}
+                {comment.length !== 0 && (
+                  <SpanComment>[{comment.length}]</SpanComment>
+                )}
               </DivTitle>
-              {comment.length !== 0 && (
-                <SpanComment>[{comment.length}]</SpanComment>
-              )}
             </DivTitleWrap>
             <DivContent>
-              {post.content.length > 40
-                ? `${post.content.substring(0, 40)}...`
+              {post.content.length > 30
+                ? `${post.content.substring(0, 30)}...`
                 : post.content}
             </DivContent>
           </DivContentWrap>
@@ -56,6 +56,10 @@ const DivContainer = styled.div`
 const DivWrap = styled.div`
   display: flex;
   align-items: center;
+  @media (max-width: 800px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const DivContentWrap = styled.div`
@@ -63,6 +67,9 @@ const DivContentWrap = styled.div`
   flex-direction: column;
   align-items: flex-start;
   flex: 2 0 70%;
+  @media (max-width: 800px) {
+    margin: 0 0 0.7rem;
+  }
 `;
 
 const DivTitleWrap = styled.div`
@@ -79,6 +86,7 @@ const DivTitle = styled.div`
 const SpanComment = styled.span`
   font-size: 1rem;
   color: #646464;
+  padding: 0 0 0 0.3rem;
 `;
 
 const DivContent = styled.div`
