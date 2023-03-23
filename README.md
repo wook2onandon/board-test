@@ -40,7 +40,7 @@ api명세가 없어서 api를 호출하는 부분에서 조금 어려웠지만 �
 
 게시글과 댓글의 고유한 id를 부여하기 위해 uuid library를 사용하였습니다. uuid를 사용함에 있어 typescript버전을 설치해서 사용하는데 오류가 생겨 이유를 찾아보았지만 끝내 찾지는 못했습니다. 그래서 기존의 react버전의 uuid를 설치한 뒤 types폴더를 생성한뒤 index.d.ts를 만들어 react버전의 uuid를 사용하였습니다.
 
-🔨 Technology Stack(s)
+## 🔨 Technology Stack(s)
 
 - next.js
 - typescript
