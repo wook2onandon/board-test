@@ -73,7 +73,7 @@ const Post = ({
         }
       })
       .catch((res) => {
-        console.log(res, 'fail');
+        // console.log(res, 'fail');
       });
   };
 

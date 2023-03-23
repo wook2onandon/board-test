@@ -21,9 +21,11 @@ export const patchComment = async (comment: CommentType) => {
   const result = await res
     .json()
     .then((res) => {
-      console.log(res);
+      // console.log(res);
     })
-    .catch((res) => console.log(res));
+    .catch((res) => {
+      // console.log(res)
+    });
 };
 
 const SingleComment = ({
@@ -133,7 +135,7 @@ const SingleComment = ({
         }
       })
       .catch((res) => {
-        console.log(res, 'fail');
+        // console.log(res, 'fail');
       });
   };
 

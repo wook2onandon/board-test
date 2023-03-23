@@ -14,9 +14,11 @@ export const patchContent = async (post: PostType) => {
   const result = await res
     .json()
     .then((res) => {
-      console.log(res);
+      // console.log(res);
     })
-    .catch((res) => console.log(res));
+    .catch((res) => {
+      // console.log(res)
+    });
 };
 
 const Write = ({ post }: { post: PostType }) => {

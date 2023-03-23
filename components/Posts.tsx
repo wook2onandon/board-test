@@ -10,7 +10,6 @@ const Posts = ({ posts, comments }: dataType) => {
   const [limit, setLimit] = useState(10);
   const offset = (page - 1) * limit;
 
-  console.log(offset, offset + limit);
   return (
     <>
       <LabelArticleNum>
